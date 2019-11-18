@@ -4,7 +4,7 @@
 if [ "$3" == "yes" ]
 then
 	wget -P $2 $1
-	gunzip -k $2
+	gunzip -k $2/$(basename $1)
 else
 	wget -P $2 $1
 fi
