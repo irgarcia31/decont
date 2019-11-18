@@ -1,26 +1,23 @@
-# Decidir si meto esto o no
-cd /home/user14/Desktop/exam/decont
-export WD=$(pwd)
 
-#Download all the files specified in data/filenames
-for url in $(cat data/urls) #TODO
+#Download all the files specified in data/urls
+for url in $(cat data/urls)
 do
     bash scripts/download.sh $url data
 done
 
 # Download the contaminants fasta file, and uncompress it
-bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes #TODO
+bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes
 
 # Index the contaminants file
 bash scripts/index.sh res/contaminants.fasta res/contaminants_idx
 
 # Merge the samples into a single file
-for sid in $(ls data/*.fastq.gz | cut -d"-" -f1 | sed "s:data/::" | sort | uniq) #TODO
+for sid in $(ls data/*.fastq.gz | cut -d"-" -f1 | sed "s:data/::" | sort | uniq)
 do
     bash scripts/merge_fastqs.sh data out/merged $sid
 done
 
-# TODO: run cutadapt for all merged files
+# TODO - for: run cutadapt for all merged files
 # cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o <trimmed_file> <input_file> > <log_file>
 
 #TODO: run STAR for all trimmed files
