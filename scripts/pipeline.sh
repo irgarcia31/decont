@@ -1,17 +1,21 @@
+# Decidir si meto esto o no
+cd /home/user14/Desktop/exam/decont
+export WD=$(pwd)
+
 #Download all the files specified in data/filenames
-for url in $(<list_of_urls>) #TODO
+for url in $(cat data/urls) #TODO
 do
     bash scripts/download.sh $url data
 done
 
 # Download the contaminants fasta file, and uncompress it
-bash scripts/download.sh <contaminants_url> res yes #TODO
+bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes #TODO
 
 # Index the contaminants file
 bash scripts/index.sh res/contaminants.fasta res/contaminants_idx
 
 # Merge the samples into a single file
-for sid in $(<list_of_sample_ids) #TODO
+for sid in $(<list_of_sample_ids  basename ) #TODO
 do
     bash scripts/merge_fastqs.sh data out/merged $sid
 done
