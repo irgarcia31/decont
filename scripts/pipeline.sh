@@ -29,7 +29,7 @@ echo
 echo "Running cutadapt..."
 mkdir -p out/trimmed
 mkdir -p log/cutadapt
-for sid in $(ls out/merged/*.fastq.gz | cut -d "." -f1 | sed 's:out/merged/::' | sort | uniq)
+for sid in $(ls out/merged/*.fastq.gz | cut -d "." -f1 | sed 's:out/merged/::')
 do
 	cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o  out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz > log/cutadapt/${sid}.log
 done
@@ -51,12 +51,15 @@ echo
 # - cutadapt: Reads with adapters and total basepairs
 # - star: Percentages of uniquely mapped reads, reads mapped to multiple loci, and to too many loci
 echo "Creating a report..."
-for sid in $(ls out/merged/*.fastq.gz | cut -d "." -f1 | sed 's:out/merged/::' | sort | uniq)
+for sid in $(ls out/merged/*.fastq.gz | cut -d "." -f1 | sed 's:out/merged/::')
 do
+	echo "			~~~ ${sid} sample ~~~" >> log/pipeline.log
+	echo >> log/pipeline.log
         cat log/cutadapt/${sid}.log | grep "Reads with adapters:" >> log/pipeline.log
         cat log/cutadapt/${sid}.log | grep "Total basepairs processed:" >> log/pipeline.log
         cat out/star/${sid}/Log.final.out | grep "Uniquely mapped reads %" >> log/pipeline.log
         cat out/star/${sid}/Log.final.out | grep "% of reads mapped to multiple loci" >> log/pipeline.log
         cat out/star/${sid}/Log.final.out | grep "% of reads mapped to too many loci" >> log/pipeline.log
+	echo >> log/pipeline.log
 done
 
